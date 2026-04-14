@@ -16,6 +16,10 @@ import { OnboardingEndpoints } from './endpoints/Onboarding.js';
 import { SoundboardEndpoints } from './endpoints/Soundboard.js';
 import { PollEndpoints } from './endpoints/Polls.js';
 import { AutoModerationEndpoints } from './endpoints/AutoModeration.js';
+import { AccountEndpoints } from './endpoints/Account.js';
+import { RelationshipEndpoints } from './endpoints/Relationships.js';
+import { ApplicationEndpoints } from './endpoints/Application.js';
+import { BillingEndpoints } from './endpoints/Billing.js';
 import { APIError, RateLimitError, ConnectionError } from '../utils/Errors.js';
 
 export class REST {

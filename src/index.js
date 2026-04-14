@@ -12,6 +12,10 @@ export { OnboardingEndpoints } from './api/endpoints/Onboarding.js';
 export { SoundboardEndpoints } from './api/endpoints/Soundboard.js';
 export { PollEndpoints } from './api/endpoints/Polls.js';
 export { AutoModerationEndpoints } from './api/endpoints/AutoModeration.js';
+export { AccountEndpoints } from './api/endpoints/Account.js';
+export { RelationshipEndpoints } from './api/endpoints/Relationships.js';
+export { ApplicationEndpoints } from './api/endpoints/Application.js';
+export { BillingEndpoints } from './api/endpoints/Billing.js';
 export {
   DoubleError,
   TokenError,
