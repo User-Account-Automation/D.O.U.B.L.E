@@ -149,4 +149,16 @@ export class Client {
   get threads() {
     return this.rest.threads;
   }
+
+  get auditLogs() {
+    return this.rest.auditLogs;
+  }
+
+  get invites() {
+    return this.rest.invites;
+  }
+
+  get applicationCommands() {
+    return this.rest.applicationCommands;
+  }
 }

@@ -7,6 +7,10 @@ import { InteractionEndpoints } from './endpoints/Interactions.js';
 import { EmojiEndpoints } from './endpoints/Emojis.js';
 import { StickerEndpoints } from './endpoints/Stickers.js';
 import { ThreadEndpoints } from './endpoints/Threads.js';
+import { GuildEndpoints } from './endpoints/Guilds.js';
+import { AuditLogEndpoints } from './endpoints/AuditLogs.js';
+import { InviteEndpoints } from './endpoints/Invites.js';
+import { ApplicationCommandEndpoints } from './endpoints/ApplicationCommands.js';
 import { APIError, RateLimitError, ConnectionError } from '../utils/Errors.js';
 
 export class REST {
@@ -19,6 +23,9 @@ export class REST {
     this.account = new AccountEndpoints(this);
     this.relationships = new RelationshipEndpoints(this);
     this.guilds = new GuildEndpoints(this);
+    this.auditLogs = new AuditLogEndpoints(this);
+    this.invites = new InviteEndpoints(this);
+    this.applicationCommands = new ApplicationCommandEndpoints(this);
     this.applications = new ApplicationEndpoints(this);
     this.billing = new BillingEndpoints(this);
     this.channels = new ChannelEndpoints(this);
@@ -306,27 +313,6 @@ class RelationshipEndpoints {
   }
 }
 
-class GuildEndpoints {
-  constructor(rest) {
-    this.rest = rest;
-  }
-
-  async getGuild(guildId) {
-    return this.rest.get(`/guilds/${guildId}`);
-  }
-
-  async leaveGuild(guildId) {
-    return this.rest.delete(`/users/@me/guilds/${guildId}`);
-  }
-
-  async joinGuild(inviteCode) {
-    return this.rest.post(`/invites/${inviteCode}`);
-  }
-
-  async getChannels(guildId) {
-    return this.rest.get(`/guilds/${guildId}/channels`);
-  }
-}
 
 class ApplicationEndpoints {
   constructor(rest) {
