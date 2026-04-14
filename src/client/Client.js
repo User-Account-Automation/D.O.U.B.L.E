@@ -65,6 +65,10 @@ export class Client {
       this.logger.info('Connecting to gateway');
       await this.gateway.connect(token);
       this.ready = true;
+      
+      const profile = await this.rest.get('/users/@me');
+      this.rest.applicationId = profile.id;
+      
       this.logger.info('Connected successfully');
     } catch (error) {
       this.connected = false;
@@ -160,5 +164,25 @@ export class Client {
 
   get applicationCommands() {
     return this.rest.applicationCommands;
+  }
+
+  get stageChannels() {
+    return this.rest.stageChannels;
+  }
+
+  get onboarding() {
+    return this.rest.onboarding;
+  }
+
+  get soundboard() {
+    return this.rest.soundboard;
+  }
+
+  get polls() {
+    return this.rest.polls;
+  }
+
+  get autoModeration() {
+    return this.rest.autoModeration;
   }
 }

@@ -205,10 +205,15 @@ export class Gateway {
     } catch (error) {
       console.error('Reconnection failed:', error);
       this.reconnecting = false;
+      
       if (this.reconnectTimeout) {
         clearTimeout(this.reconnectTimeout);
       }
-      this.reconnectTimeout = setTimeout(() => this._attemptReconnect(), 1000);
+      
+      this.reconnectTimeout = setTimeout(() => {
+        this.reconnectTimeout = null;
+        this._attemptReconnect();
+      }, 1000);
     }
   }
 

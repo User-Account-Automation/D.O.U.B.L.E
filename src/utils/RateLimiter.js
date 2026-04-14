@@ -21,9 +21,8 @@ export class RateLimiter {
   }
 
   async waitBeforeRequest(endpoint, method) {
-    if (this.requestLock) {
+    while (this.requestLock) {
       await this._sleep(50);
-      return this.waitBeforeRequest(endpoint, method);
     }
     
     this.requestLock = true;

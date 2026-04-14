@@ -1,27 +1,38 @@
+<div align="center">
+
 # D.O.U.B.L.E
 
 ![D.O.U.B.L.E](D.O.U.B.L.E.png)
 
-[![npm version](https://badge.fury.io/js/%40uaa%2Fdouble.svg)](https://www.npmjs.com/package/@uaa/double)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/node/v/@uaa/double.svg)](https://www.npmjs.com/package/@uaa/double)
+[![Node.js Version](https://img.shields.io/node/v-18-lts.svg)](https://nodejs.org)
+
+**Version**: 0.1.0  
+**Node.js**: 18+  
+**Status**: Active Development
+
+---
 
 > **⚠️ WARNING**: Using self-bots violates Discord's Terms of Service. Your account can be permanently banned. This is for educational purposes only. Use at your own risk. I'm not responsible if you get banned.
+
+</div>
 
 D.O.U.B.L.E (Discord Operations for User-Based Logic and Execution) is a JavaScript wrapper for Discord's user account API. I made this because I wanted to automate some things with my personal Discord account without dealing with the limitations and complexity of bot accounts.
 
 It's basically discord.js but for user accounts instead of bots. It handles rate limiting, adds some safety features to help avoid getting banned, and gives you access to pretty much everything you can do with your own account through the API.
 
-## Installing
+## Installation
 
 ```bash
-npm install @uaa/double
+git clone https://github.com/User-Account-Automation/D.O.U.B.L.E.git
+cd D.O.U.B.L.E
+npm install
 ```
 
 ## Getting Started
 
 ```javascript
-import { Client } from '@uaa/double';
+import { Client } from './src/index.js';
 
 const client = new Client({
   token: process.env.DISCORD_TOKEN,

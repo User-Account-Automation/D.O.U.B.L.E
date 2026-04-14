@@ -11,6 +11,11 @@ import { GuildEndpoints } from './endpoints/Guilds.js';
 import { AuditLogEndpoints } from './endpoints/AuditLogs.js';
 import { InviteEndpoints } from './endpoints/Invites.js';
 import { ApplicationCommandEndpoints } from './endpoints/ApplicationCommands.js';
+import { StageChannelEndpoints } from './endpoints/StageChannels.js';
+import { OnboardingEndpoints } from './endpoints/Onboarding.js';
+import { SoundboardEndpoints } from './endpoints/Soundboard.js';
+import { PollEndpoints } from './endpoints/Polls.js';
+import { AutoModerationEndpoints } from './endpoints/AutoModeration.js';
 import { APIError, RateLimitError, ConnectionError } from '../utils/Errors.js';
 
 export class REST {
@@ -19,6 +24,7 @@ export class REST {
     this.baseURL = 'https://discord.com/api/v10';
     this.maxRetries = 3;
     this.retryDelay = 1000;
+    this.applicationId = null;
     
     this.account = new AccountEndpoints(this);
     this.relationships = new RelationshipEndpoints(this);
@@ -26,6 +32,11 @@ export class REST {
     this.auditLogs = new AuditLogEndpoints(this);
     this.invites = new InviteEndpoints(this);
     this.applicationCommands = new ApplicationCommandEndpoints(this);
+    this.stageChannels = new StageChannelEndpoints(this);
+    this.onboarding = new OnboardingEndpoints(this);
+    this.soundboard = new SoundboardEndpoints(this);
+    this.polls = new PollEndpoints(this);
+    this.autoModeration = new AutoModerationEndpoints(this);
     this.applications = new ApplicationEndpoints(this);
     this.billing = new BillingEndpoints(this);
     this.channels = new ChannelEndpoints(this);
