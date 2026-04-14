@@ -12,23 +12,38 @@ export class RateLimiter {
     this.actionTimestamps = new Map();
     this.globalLimit = 50;
     this.globalResetTime = null;
+    this.cleanupInterval = setInterval(() => {
+      this._cleanupHistory();
+      this._cleanupActionTimestamps();
+    }, 300000);
+    this.requestLock = false;
   }
 
   async waitBeforeRequest(endpoint, method) {
+    if (this.requestLock) {
+      await this._sleep(50);
+      return this.waitBeforeRequest(endpoint, method);
+    }
+    
+    this.requestLock = true;
     const now = Date.now();
     
-    await this._enforceGlobalLimit();
-    await this._enforceEndpointLimit(endpoint, method);
-    await this._enforceSimilarActionDelay(endpoint);
-    
-    this.requestHistory.push({
-      endpoint,
-      method,
-      timestamp: now
-    });
-    
-    this._cleanupHistory();
-    this._cleanupActionTimestamps();
+    try {
+      await this._enforceGlobalLimit();
+      await this._enforceEndpointLimit(endpoint, method);
+      await this._enforceSimilarActionDelay(endpoint);
+      
+      this.requestHistory.push({
+        endpoint,
+        method,
+        timestamp: now
+      });
+      
+      this._cleanupHistory();
+      this._cleanupActionTimestamps();
+    } finally {
+      this.requestLock = false;
+    }
   }
 
   async _enforceGlobalLimit() {
@@ -39,6 +54,11 @@ export class RateLimiter {
       if (waitTime > 0) {
         await this._sleep(waitTime);
       }
+    }
+    
+    if (this.globalResetTime && now >= this.globalResetTime) {
+      this.globalResetTime = null;
+      this.globalLimit = 50;
     }
     
     const recentRequests = this.requestHistory.filter(
@@ -165,5 +185,32 @@ export class RateLimiter {
     this.requestHistory = [];
     this.actionTimestamps.clear();
     this.globalResetTime = null;
+  }
+
+  destroy() {
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
+    }
+  }
+
+  updateFromHeaders(headers) {
+    if (headers.remaining != null) {
+      const remaining = parseInt(headers.remaining);
+      if (!isNaN(remaining)) {
+        this.remaining = remaining;
+      }
+    }
+    
+    if (headers.reset != null) {
+      const reset = parseInt(headers.reset);
+      if (!isNaN(reset)) {
+        this.resetTime = reset * 1000;
+      }
+    }
+    
+    if (headers.global === 'true') {
+      this.globalLimit = true;
+    }
   }
 }
