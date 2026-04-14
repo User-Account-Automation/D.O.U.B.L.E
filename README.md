@@ -5,7 +5,7 @@
 ![D.O.U.B.L.E](D.O.U.B.L.E.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/node/v-18-lts.svg)](https://nodejs.org)
+[![Node.js](https://img.shields.io/badge/node-18%2B-brightgreen.svg)](https://nodejs.org)
 
 **Version**: 0.1.0  
 **Node.js**: 18+  

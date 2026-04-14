@@ -75,15 +75,16 @@ export class SoundboardEndpoints {
    * });
    */
   async createSound(guildId, data) {
-    const formData = new FormData();
-    formData.append('name', data.name);
-    formData.append('file', data.sound);
+    const body = {
+      name: data.name,
+      sound: data.sound
+    };
     
-    if (data.volume !== undefined) formData.append('volume', data.volume.toString());
-    if (data.emoji_id) formData.append('emoji_id', data.emoji_id);
-    if (data.emoji_name) formData.append('emoji_name', data.emoji_name);
+    if (data.volume !== undefined) body.volume = data.volume;
+    if (data.emoji_id) body.emoji_id = data.emoji_id;
+    if (data.emoji_name) body.emoji_name = data.emoji_name;
     
-    return this.rest.post(`/guilds/${guildId}/soundboard-sounds`, { body: formData, headers: { 'Content-Type': 'multipart/form-data' } });
+    return this.rest.post(`/guilds/${guildId}/soundboard-sounds`, { body });
   }
 
   /**
