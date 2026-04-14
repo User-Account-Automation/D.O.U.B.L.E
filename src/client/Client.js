@@ -24,8 +24,9 @@ export class Client {
       throw new TokenError('Token is required. Set it via options.token or DISCORD_TOKEN environment variable');
     }
 
+    this.logger = new Logger({ level: this.options.logLevel });
+
     try {
-      this.logger = new Logger({ level: this.options.logLevel });
       this.tokenManager = new TokenManager(options.token);
       this.rateLimiter = new RateLimiter(this.options);
       this.safetyManager = new SafetyManager(this.options);
@@ -85,7 +86,9 @@ export class Client {
       this.ready = false;
       
       this.rateLimiter.reset();
+      this.rateLimiter.destroy();
       this.safetyManager.reset();
+      this.safetyManager.destroy();
       
       this.logger.info('Disconnected successfully');
     } catch (error) {
