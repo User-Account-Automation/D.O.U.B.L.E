@@ -102,4 +102,43 @@ export class AccountEndpoints {
   async modifySettings(data) {
     return this.rest.patch('/users/@me/settings', { body: data });
   }
+
+  /**
+   * Gets the user's guilds.
+   * 
+   * @returns {Promise<Array>} Array of guild objects
+   * 
+   * @example
+   * const guilds = await account.getGuilds();
+   */
+  async getGuilds() {
+    return this.rest.get('/users/@me/guilds');
+  }
+
+  /**
+   * Gets the user's connections.
+   * 
+   * @returns {Promise<Array>} Array of connection objects
+   * 
+   * @example
+   * const connections = await account.getConnections();
+   */
+  async getConnections() {
+    return this.rest.get('/users/@me/connections');
+  }
+
+  /**
+   * Sets the user's profile.
+   * 
+   * @param {Object} data - Profile data
+   * @returns {Promise<Object>} The modified user object
+   * 
+   * @example
+   * const user = await account.setProfile({
+   *   username: 'NewUsername'
+   * });
+   */
+  async setProfile(data) {
+    return this.rest.patch('/users/@me', { body: data });
+  }
 }

@@ -37,6 +37,22 @@ export class RelationshipEndpoints {
   }
 
   /**
+   * Gets all friends (relationships of type 1).
+   * 
+   * @returns {Promise<Array>} Array of friend relationship objects
+   * 
+   * @example
+   * const friends = await relationships.getFriends();
+   * friends.forEach(friend => {
+   *   console.log(`${friend.user.username}`);
+   * });
+   */
+  async getFriends() {
+    const relationships = await this.rest.get('/users/@me/relationships');
+    return relationships.filter(rel => rel.type === 1);
+  }
+
+  /**
    * Gets a specific relationship by user ID.
    * 
    * @param {string} userId - The user ID
