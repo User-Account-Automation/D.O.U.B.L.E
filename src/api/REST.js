@@ -13,7 +13,6 @@ export class REST {
   constructor(client) {
     this.client = client;
     this.baseURL = 'https://discord.com/api/v10';
-    this.agent = null;
     this.maxRetries = 3;
     this.retryDelay = 1000;
     
@@ -120,7 +119,11 @@ export class REST {
     const status = response.status;
     
     if (status === 429) {
-      const retryAfter = parseInt(response.headers.get('Retry-After') || '5');
+      const retryAfterHeader = response.headers.get('Retry-After');
+      let retryAfter = parseInt(retryAfterHeader || '5');
+      if (isNaN(retryAfter) || retryAfter < 0) {
+        retryAfter = 5;
+      }
       const isGlobal = response.headers.get('X-RateLimit-Global') === 'true';
       
       this.client.logger.warn(`Rate limited. ${isGlobal ? 'Global' : 'Local'} rate limit. Retrying after ${retryAfter}s`);
@@ -221,16 +224,24 @@ export class REST {
   }
 
   _updateRateLimits(headers) {
-    if (headers.remaining !== null) {
-      this.client.rateLimiter.remaining = parseInt(headers.remaining);
+    if (headers.remaining != null) {
+      const remaining = parseInt(headers.remaining);
+      if (!isNaN(remaining)) {
+        this.client.rateLimiter.remaining = remaining;
+      }
     }
     
-    if (headers.reset !== null) {
-      this.client.rateLimiter.resetTime = parseInt(headers.reset) * 1000;
+    if (headers.reset != null) {
+      const reset = parseInt(headers.reset);
+      if (!isNaN(reset)) {
+        this.client.rateLimiter.resetTime = reset * 1000;
+      }
     }
     
     if (headers.global === 'true') {
       this.client.rateLimiter.globalLimit = true;
+    } else if (headers.global === 'false') {
+      this.client.rateLimiter.globalLimit = false;
     }
   }
 
