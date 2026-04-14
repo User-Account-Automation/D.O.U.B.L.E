@@ -96,4 +96,16 @@ export class ApplicationEndpoints {
   async getAssets(applicationId) {
     return this.rest.get(`/applications/${applicationId}/assets`);
   }
+
+  /**
+   * Gets all applications for the current user.
+   * 
+   * @returns {Promise<Array>} Array of application objects
+   * 
+   * @example
+   * const applications = await applications.getApplications();
+   */
+  async getApplications() {
+    return this.rest.get('/users/@me/applications');
+  }
 }

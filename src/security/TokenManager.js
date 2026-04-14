@@ -79,8 +79,7 @@ export class TokenManager {
   _decodeUserId(base64Part) {
     try {
       const decoded = Buffer.from(base64Part, 'base64').toString('utf-8');
-      const jsonPart = JSON.parse(decoded);
-      return jsonPart.id;
+      return decoded;
     } catch (error) {
       throw new Error('Failed to decode user ID from token');
     }
