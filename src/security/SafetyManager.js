@@ -13,6 +13,7 @@ export class SafetyManager {
     this.riskLevel = this._getSafetyLevel();
     this.auditLog = [];
     this.emergencyTriggered = false;
+    this.cleanupInterval = setInterval(() => this._cleanupAuditLog(), 300000);
   }
 
   _getSafetyLevel() {
@@ -27,6 +28,14 @@ export class SafetyManager {
   }
 
   assessRisk(action, details = {}) {
+    if (!action || typeof action !== 'string') {
+      throw new Error('Action must be a non-empty string');
+    }
+    
+    if (!details || typeof details !== 'object') {
+      details = {};
+    }
+    
     const riskFactors = this._calculateRiskFactors(action, details);
     const totalRisk = this._aggregateRisk(riskFactors);
     
@@ -91,7 +100,7 @@ export class SafetyManager {
   }
 
   _getContentRisk(details) {
-    if (!details.content) {
+    if (!details || !details.content) {
       return 0;
     }
     
@@ -122,11 +131,15 @@ export class SafetyManager {
   }
 
   _getVolumeRisk(details) {
-    if (details.count && details.count > 10) {
+    if (!details || !details.count) {
+      return 0;
+    }
+    
+    if (details.count > 10) {
       return 0.8;
     }
     
-    if (details.count && details.count > 5) {
+    if (details.count > 5) {
       return 0.5;
     }
     
@@ -182,6 +195,7 @@ export class SafetyManager {
 
   logAction(action, details = {}) {
     if (!this.options.auditLogging) {
+      this._cleanupAuditLog();
       return;
     }
     
@@ -227,5 +241,12 @@ export class SafetyManager {
   reset() {
     this.auditLog = [];
     this.emergencyTriggered = false;
+  }
+
+  destroy() {
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
+    }
   }
 }
