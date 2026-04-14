@@ -129,7 +129,7 @@ export class REST {
       this.client.logger.warn(`Rate limited. ${isGlobal ? 'Global' : 'Local'} rate limit. Retrying after ${retryAfter}s`);
       
       if (isGlobal) {
-        this.client.rateLimiter.globalLimit = true;
+        this.client.rateLimiter.globalLimitActive = true;
       }
       
       await this._sleep(retryAfter * 1000);
@@ -239,9 +239,9 @@ export class REST {
     }
     
     if (headers.global === 'true') {
-      this.client.rateLimiter.globalLimit = true;
+      this.client.rateLimiter.globalLimitActive = true;
     } else if (headers.global === 'false') {
-      this.client.rateLimiter.globalLimit = false;
+      this.client.rateLimiter.globalLimitActive = false;
     }
   }
 

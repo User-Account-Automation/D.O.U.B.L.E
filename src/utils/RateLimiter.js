@@ -11,6 +11,7 @@ export class RateLimiter {
     this.requestHistory = [];
     this.actionTimestamps = new Map();
     this.globalLimit = 50;
+    this.globalLimitActive = false;
     this.globalResetTime = null;
     this.cleanupInterval = setInterval(() => {
       this._cleanupHistory();
@@ -58,7 +59,7 @@ export class RateLimiter {
     
     if (this.globalResetTime && now >= this.globalResetTime) {
       this.globalResetTime = null;
-      this.globalLimit = 50;
+      this.globalLimitActive = false;
     }
     
     const recentRequests = this.requestHistory.filter(
@@ -210,7 +211,9 @@ export class RateLimiter {
     }
     
     if (headers.global === 'true') {
-      this.globalLimit = true;
+      this.globalLimitActive = true;
+    } else if (headers.global === 'false') {
+      this.globalLimitActive = false;
     }
   }
 }
