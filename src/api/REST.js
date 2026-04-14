@@ -89,7 +89,7 @@ export class REST {
       ...options
     };
     
-    if (options.body) {
+    if (options.body && method !== 'GET') {
       if (typeof options.body === 'object' && !(options.body instanceof Buffer) && !(options.body instanceof FormData)) {
         fetchOptions.body = JSON.stringify(options.body);
       } else {
