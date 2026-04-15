@@ -82,12 +82,15 @@ export class REST {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       ...options.headers
     };
-    
+
     const fetchOptions = {
       method,
       headers,
       ...options
     };
+
+    // Prevent user options from overriding critical headers
+    fetchOptions.headers = headers;
     
     if (options.body && method !== 'GET') {
       if (typeof options.body === 'object' && !(options.body instanceof Buffer) && !(options.body instanceof FormData)) {
