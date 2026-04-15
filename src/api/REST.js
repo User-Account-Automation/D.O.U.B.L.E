@@ -263,8 +263,12 @@ export class REST {
     if (headers.reset != null) {
       const reset = parseInt(headers.reset);
       if (!isNaN(reset)) {
-        // Discord returns Unix timestamp in seconds, convert to milliseconds
-        this.client.rateLimiter.resetTime = (reset * 1000) - Date.now();
+        // Discord returns Unix timestamp in seconds, validate reasonable range
+        const now = Math.floor(Date.now() / 1000);
+        if (reset > now && reset < now + 86400) {
+          // Discord returns Unix timestamp in seconds, convert to milliseconds
+          this.client.rateLimiter.resetTime = (reset * 1000) - Date.now();
+        }
       }
     }
     

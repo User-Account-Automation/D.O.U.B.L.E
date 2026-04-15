@@ -200,5 +200,8 @@ export class RateLimiter {
       clearInterval(this.cleanupInterval);
       this.cleanupInterval = null;
     }
+    this.requestHistory = [];
+    this.actionTimestamps.clear();
+    this.globalResetTime = null;
   }
 }

@@ -253,5 +253,7 @@ export class SafetyManager {
       clearInterval(this.cleanupInterval);
       this.cleanupInterval = null;
     }
+    this.auditLog = [];
+    this.emergencyTriggered = false;
   }
 }
