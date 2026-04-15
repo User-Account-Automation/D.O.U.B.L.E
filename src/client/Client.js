@@ -30,6 +30,7 @@ export class Client {
       this.tokenManager = new TokenManager(options.token);
       this.rateLimiter = new RateLimiter(this.options);
       this.safetyManager = new SafetyManager(this.options);
+      this.safetyManager.setLogger(this.logger);
 
       this.rest = new REST(this);
       this.gateway = new Gateway(this, { intents: options.intents });
