@@ -60,7 +60,8 @@ export class Gateway {
         this.ws.on('close', onClose);
         this.ws.on('error', onError);
         
-        this.ws.once('ready', () => {
+        // Use custom event system for READY event
+        this.on('READY', () => {
           resolve();
         });
       });
@@ -124,7 +125,7 @@ export class Gateway {
         this._handleHeartbeatAck();
         break;
       default:
-        console.log('Unknown opcode:', op);
+        this.client.logger.warn('Unknown opcode:', op);
     }
   }
 
@@ -132,8 +133,8 @@ export class Gateway {
     if (event === 'READY') {
       this.ready = true;
       this.sessionId = data.session_id;
-      this.ws.emit('ready');
-      console.log('Gateway ready');
+      this._emit('ready', data);
+      this.client.logger.info('Gateway ready');
     }
     
     this._emit(event, data);
