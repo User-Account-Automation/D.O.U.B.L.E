@@ -14,11 +14,6 @@ export class SafetyManager {
     this.auditLog = [];
     this.emergencyTriggered = false;
     this.cleanupInterval = setInterval(() => this._cleanupAuditLog(), 300000);
-    this.logger = console; // Will be replaced with client logger in production
-  }
-
-  setLogger(logger) {
-    this.logger = logger;
   }
 
   _getSafetyLevel() {
@@ -176,10 +171,10 @@ export class SafetyManager {
       factors,
       type: 'warning'
     };
-
+    
     this.auditLog.push(warning);
     this._cleanupAuditLog();
-    this.logger.warn(`[Safety Warning] High risk action detected: ${action} (risk: ${(risk * 100).toFixed(0)}%)`);
+    console.warn(`[Safety Warning] High risk action detected: ${action} (risk: ${(risk * 100).toFixed(0)}%)`);
   }
 
   _triggerEmergency(action, risk) {
@@ -190,11 +185,11 @@ export class SafetyManager {
       risk: risk.toFixed(2),
       type: 'emergency'
     };
-
+    
     this.auditLog.push(emergency);
     this._cleanupAuditLog();
-    this.logger.error(`[EMERGENCY STOP] Action blocked: ${action} (risk: ${(risk * 100).toFixed(0)}%)`);
-
+    console.error(`[EMERGENCY STOP] Action blocked: ${action} (risk: ${(risk * 100).toFixed(0)}%)`);
+    
     throw new Error(`Emergency stop triggered due to high risk action: ${action}`);
   }
 
