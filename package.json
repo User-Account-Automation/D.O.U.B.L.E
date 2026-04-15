@@ -1,0 +1,36 @@
+{
+  "name": "@uaa/double",
+  "version": "0.1.0",
+  "description": "Discord Operations for User-Based Logic and Execution - A JavaScript API wrapper for automating Discord user accounts",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "lint": "eslint src/",
+    "format": "prettier --write src/"
+  },
+  "keywords": [
+    "discord",
+    "selfbot",
+    "user-account",
+    "automation",
+    "api-wrapper"
+  ],
+  "author": "UAA (User Account Automation)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/User-Account-Automation/D.O.U.B.L.E.git"
+  }
+}
