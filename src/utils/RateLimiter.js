@@ -201,26 +201,4 @@ export class RateLimiter {
       this.cleanupInterval = null;
     }
   }
-
-  updateFromHeaders(headers) {
-    if (headers.remaining != null) {
-      const remaining = parseInt(headers.remaining);
-      if (!isNaN(remaining)) {
-        this.remaining = remaining;
-      }
-    }
-    
-    if (headers.reset != null) {
-      const reset = parseInt(headers.reset);
-      if (!isNaN(reset)) {
-        this.resetTime = reset * 1000;
-      }
-    }
-    
-    if (headers.global === 'true') {
-      this.globalLimitActive = true;
-    } else if (headers.global === 'false') {
-      this.globalLimitActive = false;
-    }
-  }
 }
