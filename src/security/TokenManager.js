@@ -104,9 +104,11 @@ export class TokenManager {
     
     const parts = this.token.split('.');
     if (parts.length === 3) {
-      return `${parts[0].substring(0, 8)}...${parts[2].substring(0, 8)}`;
+      const firstPart = parts[0].length > 8 ? parts[0].substring(0, 8) : parts[0];
+      const lastPart = parts[2].length > 8 ? parts[2].substring(0, 8) : parts[2];
+      return `${firstPart}...${lastPart}`;
     }
     
-    return this.token.substring(0, 8) + '...';
+    return this.token.length > 8 ? this.token.substring(0, 8) + '...' : this.token + '...';
   }
 }
