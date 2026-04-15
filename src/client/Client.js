@@ -185,8 +185,4 @@ export class Client {
   get autoModeration() {
     return this.rest.autoModeration;
   }
-
-  get billing() {
-    return this.rest.billing;
-  }
 }
