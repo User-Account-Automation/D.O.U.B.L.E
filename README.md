@@ -8,7 +8,7 @@ D.O.U.B.L.E (Discord Operations for User-Based Logic and Execution) is a compreh
 
 Unlike Python selfbot libraries, D.O.U.B.L.E is built specifically for the JavaScript/Node.js ecosystem, making it perfect for developers who prefer JavaScript or need to integrate Discord automation into existing Node.js projects.
 
-**WARNING: Using self-bots violates Discord's Terms of Service. Your account can be permanently banned. This is for educational purposes only. Use at your own risk.**
+WARNING: Using self-bots violates Discord's Terms of Service. Your account can be permanently banned. This is for educational purposes only. Use at your own risk.
 
 ## Table of Contents
 
@@ -65,7 +65,7 @@ cd D.O.U.B.L.E
 npm install
 ```
 
-## 🎯 Quick Start
+## Quick Start
 
 ```javascript
 import { Client } from './src/index.js';
@@ -146,34 +146,28 @@ await client.channels.createMessage('channel_id', {
 - OAuth2 tokens - View OAuth2 tokens
 - Billing info - View subscriptions and payment methods
 
-## ety Features
+## 🔒 Safety Features
 
 D.O.U.B.L.E includes comprehensive safety features to help reduce the risk of account bans:
 
 ### Token Security
-
-
-- vironment variable enrcement - Tokens must be in DISCORD_TOKEN
--  hardcoding allod - Prevents accidental token exposure
+- Environment variable enforcement - Tokens must be in DISCORD_TOKEN
+- No hardcoding allowed - Prevents accidental token exposure
 - Token validation - Validates token format before use
 
-
-##Rate Limiting
-
-- aptive rate limits -djusts based on usage patterns
-- man-like delays - Mimicsuman behavior between actions
+### Rate Limiting
+- Adaptive rate limits - Adjusts based on usage patterns
+- Human-like delays - Mimics human behavior between actions
 - Global rate limiting - Prevents overall API abuse
-- Endpoint-specif
-ic limits - Respects Discord's rate limits
+- Endpoint-specific limits - Respects Discord's rate limits
 
-##Safety Checks
-
-- sk assessment Evaluates risk before actions
+### Safety Checks
+- Risk assessment - Evaluates risk before actions
 - Warning system - Alerts before dangerous operations
-- it logging - Logs all actions for review
+- Audit logging - Logs all actions for review
 - Emergency stop - Immediate shutdown capability
 
-## 📖 Documentation
+## 📖 📖 Documentation
 
 ### Client Class
 The main entry point for all operations.
@@ -214,7 +208,7 @@ await client.voice.leaveVoiceChannel('channel_id');
 await client.webhooks.createWebhook('channel_id', { name: 'My Webhook' });
 ```
 
-## 🆚 Comparison with Python Selfbot Libraries
+## Comparison with Python Selfbot Libraries
 
 | Feature | D.O.U.B.L.E (JS) | Python Libraries |
 |---------|------------------|------------------|
@@ -227,12 +221,12 @@ await client.webhooks.createWebhook('channel_id', { name: 'My Webhook' });
 | Web Integration | Native (Node.js) | Requires Flask/Django |
 | Real-time | Native WebSocket | Requires websockets |
 
-**Advantages of D.O.U.B.L.E:**
-- **Better for web projects** - Native integration with Express, Fastify, etc.
-- **Faster development** - Modern JavaScript syntax and tooling
-- **Larger ecosystem** - Access to npm's massive package library
-- **TypeScript support** - Built-in type safety with IDE autocomplete
-- **Real-time applications** - Native WebSocket support for live features
+Advantages of D.O.U.B.L.E:
+- Better for web projects - Native integration with Express, Fastify, etc.
+- Faster development - Modern JavaScript syntax and tooling
+- Larger ecosystem - Access to npm's massive package library
+- TypeScript support - Built-in type safety with IDE autocomplete
+- Real-time applications - Native WebSocket support for live features
 
 ## 🛠️ API Reference
 
@@ -247,31 +241,29 @@ interface ClientOptions {
 
 ### Safety Levels
 
-- **strict** - Maximum safety, slowest operations
--  ⚠️**medium** - Balanced safety and speed
-- **relaxed** - Minimal safety, fastest operations
+- strict - Maximum safety, slowest operations
+- medium - Balanced safety and speed
+- relaxed - Minimal safety, fastest operations
 
-## ⚠️ Disclaimer
+## Disclaimer
 
-**Using self-bots violates Discord's Terms of Service.** Your account can be permanently banned. This library is for educational purposes and personal use only. 
+Using self-bots violates Discord's Terms of Service. Your account can be permanently banned. This library is for educational purposes and personal use only.
 
-- **I am not responsible** if you get banned
-- **Use at your own risk**
--  📝**Respect Discord's ToS**
-- **Don't abuse the API**
+- I am not responsible if you get banned
+- Use at your own risk
+- Respect Discord's ToS
+- Don't abuse the API
 
-## 📝 License
+## License
 
 MIT License - you must give credit if you use this code.
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📧 Contact
+## Contact
 
-Made by **UAA (User Account Automation)**
+Made by UAA (User Account Automation)
 
----
-
-**Keywords:** discord selfbot, javascript selfbot, node.js discord automation, discord user account api, discord automation library, selfbot library js, discord bot alternative, user account automation, discord selfbot npm, discord selfbot github
+Keywords: discord selfbot, javascript selfbot, node.js discord automation, discord user account api, discord automation library, selfbot library js, discord bot alternative, user account automation, discord selfbot npm, discord selfbot github
