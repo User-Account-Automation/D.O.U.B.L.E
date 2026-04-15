@@ -1,3 +1,5 @@
+![D.O.U.B.L.E](D.O.U.B.L.E.png)
+
 # D.O.U.B.L.E - JavaScript Discord Selfbot Library
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
