@@ -255,10 +255,10 @@ export class Gateway {
       }
       
       if (this.ws && this.wsEventHandlers) {
-        this.ws.removeListener('open', this.wsEventHandlers.onOpen);
-        this.ws.removeListener('message', this.wsEventHandlers.onMessage);
-        this.ws.removeListener('close', this.wsEventHandlers.onClose);
-        this.ws.removeListener('error', this.wsEventHandlers.onError);
+        this.ws.removeEventListener('open', this.wsEventHandlers.onOpen);
+        this.ws.removeEventListener('message', this.wsEventHandlers.onMessage);
+        this.ws.removeEventListener('close', this.wsEventHandlers.onClose);
+        this.ws.removeEventListener('error', this.wsEventHandlers.onError);
         this.wsEventHandlers = null;
       }
       
