@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import { ConnectionError } from '../utils/Errors.js';
 
 export class Gateway {
-  constructor(client) {
+  constructor(client, options = {}) {
     this.client = client;
     this.ws = null;
     this.heartbeatInterval = null;
@@ -14,7 +14,8 @@ export class Gateway {
     this.maxReconnectAttempts = 5;
     this.reconnectTimeout = null;
     this.reconnecting = false;
-    
+    this.intents = options.intents || 513;
+
     this.eventHandlers = new Map();
     this.ready = false;
     this.wsEventHandlers = null;
@@ -91,10 +92,10 @@ export class Gateway {
         },
         compress: false,
         large_threshold: 50,
-        intents: 513
+        intents: this.intents
       }
     };
-    
+
     this._send(payload);
   }
 
