@@ -185,6 +185,14 @@ export class RateLimiter {
     this.requestHistory = [];
     this.actionTimestamps.clear();
     this.globalResetTime = null;
+    // Clear and recreate cleanup interval to prevent memory leak
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = setInterval(() => {
+        this._cleanupHistory();
+        this._cleanupActionTimestamps();
+      }, 300000);
+    }
   }
 
   destroy() {
