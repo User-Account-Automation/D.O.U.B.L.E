@@ -159,7 +159,7 @@ export class REST {
       }
       
       await this._sleep(retryAfter * 1000);
-      return this.request(method, endpoint, options, retryCount);
+      return this.request(method, endpoint, options, retryCount + 1);
     }
     
     if (status === 400) {
@@ -260,7 +260,8 @@ export class REST {
     if (headers.reset != null) {
       const reset = parseInt(headers.reset);
       if (!isNaN(reset)) {
-        this.client.rateLimiter.resetTime = reset * 1000;
+        // Discord returns Unix timestamp in seconds, convert to milliseconds
+        this.client.rateLimiter.resetTime = (reset * 1000) - Date.now();
       }
     }
     
