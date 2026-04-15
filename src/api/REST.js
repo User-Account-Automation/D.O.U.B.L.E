@@ -91,8 +91,8 @@ export class REST {
 
     // Prevent user options from overriding critical headers
     fetchOptions.headers = headers;
-    
-    if (options.body && method !== 'GET') {
+
+    if (options.body != null && method !== 'GET') {
       if (typeof options.body === 'object' && !(options.body instanceof Buffer) && !(options.body instanceof FormData)) {
         fetchOptions.body = JSON.stringify(options.body);
       } else {
