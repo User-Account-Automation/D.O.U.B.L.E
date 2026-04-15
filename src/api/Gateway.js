@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import { ConnectionError } from '../utils/Errors.js';
 
 export class Gateway {
-  constructor(client, options = {}) {
+  constructor(client) {
     this.client = client;
     this.ws = null;
     this.heartbeatInterval = null;
@@ -14,8 +14,7 @@ export class Gateway {
     this.maxReconnectAttempts = 5;
     this.reconnectTimeout = null;
     this.reconnecting = false;
-    this.intents = options.intents || 513;
-
+    
     this.eventHandlers = new Map();
     this.ready = false;
     this.wsEventHandlers = null;
@@ -92,10 +91,10 @@ export class Gateway {
         },
         compress: false,
         large_threshold: 50,
-        intents: this.intents
+        intents: 513
       }
     };
-
+    
     this._send(payload);
   }
 
@@ -168,13 +167,13 @@ export class Gateway {
   }
 
   _handleDisconnect(code, reason) {
-    this.client.logger.info(`Gateway disconnected: ${code} - ${reason}`);
-
+    console.log(`Gateway disconnected: ${code} - ${reason}`);
+    
     if (this.heartbeatIntervalId) {
       clearInterval(this.heartbeatIntervalId);
       this.heartbeatIntervalId = null;
     }
-
+    
     if (code === 4000 || code === 4001) {
       this._attemptReconnect();
     }
@@ -186,36 +185,39 @@ export class Gateway {
     }
     
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      this.client.logger.error('Max reconnection attempts reached');
+      console.error('Max reconnection attempts reached');
       this.reconnecting = false;
       return;
     }
-
+    
     this.reconnecting = true;
     this.reconnectAttempts++;
     const delay = Math.pow(2, this.reconnectAttempts) * 1000;
-
-    this.client.logger.info(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`);
-
+    
+    console.log(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`);
+    
     await this._sleep(delay);
-
+    
     try {
       const token = this.client.tokenManager.getToken();
       await this.connect(token);
       this.reconnectAttempts = 0;
       this.reconnecting = false;
     } catch (error) {
-      this.client.logger.error('Reconnection failed:', error);
+      console.error('Reconnection failed:', error);
       this.reconnecting = false;
-      
+
       if (this.reconnectTimeout) {
         clearTimeout(this.reconnectTimeout);
       }
-      
-      this.reconnectTimeout = setTimeout(() => {
-        this.reconnectTimeout = null;
-        this._attemptReconnect();
-      }, 1000);
+
+      // Only attempt reconnection if we haven't maxed out attempts
+      if (this.reconnectAttempts < this.maxReconnectAttempts) {
+        this.reconnectTimeout = setTimeout(() => {
+          this.reconnectTimeout = null;
+          this._attemptReconnect();
+        }, 1000);
+      }
     }
   }
 
@@ -237,7 +239,7 @@ export class Gateway {
         try {
           handler(data);
         } catch (error) {
-          this.client.logger.error(`Error in event handler for ${event}:`, error);
+          console.error(`Error in event handler for ${event}:`, error);
         }
       }
     }
@@ -256,10 +258,10 @@ export class Gateway {
       }
       
       if (this.ws && this.wsEventHandlers) {
-        this.ws.removeEventListener('open', this.wsEventHandlers.onOpen);
-        this.ws.removeEventListener('message', this.wsEventHandlers.onMessage);
-        this.ws.removeEventListener('close', this.wsEventHandlers.onClose);
-        this.ws.removeEventListener('error', this.wsEventHandlers.onError);
+        this.ws.removeListener('open', this.wsEventHandlers.onOpen);
+        this.ws.removeListener('message', this.wsEventHandlers.onMessage);
+        this.ws.removeListener('close', this.wsEventHandlers.onClose);
+        this.ws.removeListener('error', this.wsEventHandlers.onError);
         this.wsEventHandlers = null;
       }
       
