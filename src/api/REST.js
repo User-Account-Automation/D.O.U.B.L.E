@@ -150,8 +150,8 @@ export class REST {
     if (status === 429) {
       const retryAfterHeader = response.headers.get('Retry-After');
       let retryAfter = parseInt(retryAfterHeader || '5');
-      if (isNaN(retryAfter) || retryAfter < 0) {
-        retryAfter = 5;
+      if (isNaN(retryAfter) || retryAfter < 0 || retryAfter > 3600) {
+        retryAfter = 5; // Default to 5 seconds if invalid or excessive (> 1 hour)
       }
       const isGlobal = response.headers.get('X-RateLimit-Global') === 'true';
       
