@@ -30,11 +30,10 @@ export class Client {
       this.tokenManager = new TokenManager(options.token);
       this.rateLimiter = new RateLimiter(this.options);
       this.safetyManager = new SafetyManager(this.options);
-      this.safetyManager.setLogger(this.logger);
-
+      
       this.rest = new REST(this);
-      this.gateway = new Gateway(this, { intents: options.intents });
-
+      this.gateway = new Gateway(this);
+      
       this.connected = false;
       this.ready = false;
       
@@ -60,11 +59,10 @@ export class Client {
 
       this.logger.info('Validating token');
       await this.tokenManager.validateToken(token);
-      
-      this.connected = true;
-      
+
       this.logger.info('Connecting to gateway');
       await this.gateway.connect(token);
+      this.connected = true;
       this.ready = true;
       
       const profile = await this.rest.get('/users/@me');
