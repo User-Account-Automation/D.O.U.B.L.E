@@ -1,8 +1,6 @@
 # D.O.U.B.L.E - JavaScript Discord Selfbot Library
 
-<p align="center">
-  <img src="D.O.U.B.L.E.png" alt="D.O.U.B.L.E Logo">
-</p>
+<img src="D.O.U.B.L.E.png" alt="D.O.U.B.L.E Logo">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-18%2B-brightgreen.svg)](https://nodejs.org)
