@@ -3,7 +3,9 @@
 <img src="D.O.U.B.L.E.png" alt="D.O.U.B.L.E Logo">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 [![Node.js](https://img.shields.io/badge/node-18%2B-brightgreen.svg)](https://nodejs.org)
+
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/User-Account-Automation/D.O.U.B.L.E)
 
 D.O.U.B.L.E (Discord Operations for User-Based Logic and Execution) is a comprehensive JavaScript wrapper for Discord's user account API. It is the most complete selfbot library for Node.js, providing full access to Discord user account features with built-in safety mechanisms, rate limiting, and anti-detection measures.
