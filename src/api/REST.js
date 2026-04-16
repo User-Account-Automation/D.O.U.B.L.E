@@ -82,14 +82,17 @@ export class REST {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       ...options.headers
     };
-    
+
     const fetchOptions = {
       method,
       headers,
       ...options
     };
-    
-    if (options.body && method !== 'GET') {
+
+    // Prevent user options from overriding critical headers
+    fetchOptions.headers = headers;
+
+    if (options.body != null && method !== 'GET') {
       if (typeof options.body === 'object' && !(options.body instanceof Buffer) && !(options.body instanceof FormData)) {
         fetchOptions.body = JSON.stringify(options.body);
       } else {
@@ -147,8 +150,8 @@ export class REST {
     if (status === 429) {
       const retryAfterHeader = response.headers.get('Retry-After');
       let retryAfter = parseInt(retryAfterHeader || '5');
-      if (isNaN(retryAfter) || retryAfter < 0) {
-        retryAfter = 5;
+      if (isNaN(retryAfter) || retryAfter < 0 || retryAfter > 3600) {
+        retryAfter = 5; // Default to 5 seconds if invalid or excessive (> 1 hour)
       }
       const isGlobal = response.headers.get('X-RateLimit-Global') === 'true';
       
@@ -159,7 +162,7 @@ export class REST {
       }
       
       await this._sleep(retryAfter * 1000);
-      return this.request(method, endpoint, options, retryCount);
+      return this.request(method, endpoint, options, retryCount + 1);
     }
     
     if (status === 400) {
@@ -260,7 +263,12 @@ export class REST {
     if (headers.reset != null) {
       const reset = parseInt(headers.reset);
       if (!isNaN(reset)) {
-        this.client.rateLimiter.resetTime = reset * 1000;
+        // Discord returns Unix timestamp in seconds, validate reasonable range
+        const now = Math.floor(Date.now() / 1000);
+        if (reset > now && reset < now + 86400) {
+          // Discord returns Unix timestamp in seconds, convert to milliseconds
+          this.client.rateLimiter.resetTime = (reset * 1000) - Date.now();
+        }
       }
     }
     

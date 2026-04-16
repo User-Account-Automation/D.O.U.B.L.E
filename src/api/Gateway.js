@@ -25,6 +25,10 @@ export class Gateway {
       const gatewayURL = await this._getGatewayURL();
       
       return new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new ConnectionError('Gateway connection timeout'));
+        }, 30000); // 30 second timeout
+
         this.ws = new WebSocket(gatewayURL);
         
         const onOpen = () => {
@@ -43,10 +47,12 @@ export class Gateway {
         
         const onClose = (code, reason) => {
           this.connected = false;
+          clearTimeout(timeout);
           this._handleDisconnect(code, reason);
         };
         
         const onError = (error) => {
+          clearTimeout(timeout);
           this.client.logger.error('Gateway error:', error);
           if (!this.connected) {
             reject(new ConnectionError(`Gateway connection failed: ${error.message}`));
@@ -60,7 +66,9 @@ export class Gateway {
         this.ws.on('close', onClose);
         this.ws.on('error', onError);
         
-        this.ws.once('ready', () => {
+        // Use custom event system for READY event
+        this.on('READY', () => {
+          clearTimeout(timeout);
           resolve();
         });
       });
@@ -124,7 +132,7 @@ export class Gateway {
         this._handleHeartbeatAck();
         break;
       default:
-        console.log('Unknown opcode:', op);
+        this.client.logger.warn('Unknown opcode:', op);
     }
   }
 
@@ -132,8 +140,8 @@ export class Gateway {
     if (event === 'READY') {
       this.ready = true;
       this.sessionId = data.session_id;
-      this.ws.emit('ready');
-      console.log('Gateway ready');
+      this._emit('ready', data);
+      this.client.logger.info('Gateway ready');
     }
     
     this._emit(event, data);
@@ -166,7 +174,7 @@ export class Gateway {
   }
 
   _handleDisconnect(code, reason) {
-    console.log(`Gateway disconnected: ${code} - ${reason}`);
+    this.client.logger.info(`Gateway disconnected: ${code} - ${reason}`);
     
     if (this.heartbeatIntervalId) {
       clearInterval(this.heartbeatIntervalId);
@@ -184,7 +192,7 @@ export class Gateway {
     }
     
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error('Max reconnection attempts reached');
+      this.client.logger.error('Max reconnection attempts reached');
       this.reconnecting = false;
       return;
     }
@@ -193,7 +201,7 @@ export class Gateway {
     this.reconnectAttempts++;
     const delay = Math.pow(2, this.reconnectAttempts) * 1000;
     
-    console.log(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`);
+    this.client.logger.info(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`);
     
     await this._sleep(delay);
     
@@ -203,17 +211,22 @@ export class Gateway {
       this.reconnectAttempts = 0;
       this.reconnecting = false;
     } catch (error) {
-      console.error('Reconnection failed:', error);
+      this.client.logger.error('Reconnection failed:', error);
       this.reconnecting = false;
-      
+
       if (this.reconnectTimeout) {
         clearTimeout(this.reconnectTimeout);
       }
-      
-      this.reconnectTimeout = setTimeout(() => {
-        this.reconnectTimeout = null;
-        this._attemptReconnect();
-      }, 1000);
+
+      // Only attempt reconnection if we haven't maxed out attempts
+      if (this.reconnectAttempts < this.maxReconnectAttempts) {
+        this.reconnectTimeout = setTimeout(() => {
+          this.reconnectTimeout = null;
+          this._attemptReconnect();
+        }, 1000);
+      } else {
+        this.client.logger.error('Max reconnection attempts reached after retry');
+      }
     }
   }
 
@@ -235,7 +248,7 @@ export class Gateway {
         try {
           handler(data);
         } catch (error) {
-          console.error(`Error in event handler for ${event}:`, error);
+          this.client.logger.error(`Error in event handler for ${event}:`, error);
         }
       }
     }
@@ -254,10 +267,10 @@ export class Gateway {
       }
       
       if (this.ws && this.wsEventHandlers) {
-        this.ws.removeListener('open', this.wsEventHandlers.onOpen);
-        this.ws.removeListener('message', this.wsEventHandlers.onMessage);
-        this.ws.removeListener('close', this.wsEventHandlers.onClose);
-        this.ws.removeListener('error', this.wsEventHandlers.onError);
+        this.ws.removeEventListener('open', this.wsEventHandlers.onOpen);
+        this.ws.removeEventListener('message', this.wsEventHandlers.onMessage);
+        this.ws.removeEventListener('close', this.wsEventHandlers.onClose);
+        this.ws.removeEventListener('error', this.wsEventHandlers.onError);
         this.wsEventHandlers = null;
       }
       

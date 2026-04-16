@@ -241,6 +241,11 @@ export class SafetyManager {
   reset() {
     this.auditLog = [];
     this.emergencyTriggered = false;
+    // Clear and recreate cleanup interval to prevent memory leak
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = setInterval(() => this._cleanupAuditLog(), 300000);
+    }
   }
 
   destroy() {
@@ -248,5 +253,7 @@ export class SafetyManager {
       clearInterval(this.cleanupInterval);
       this.cleanupInterval = null;
     }
+    this.auditLog = [];
+    this.emergencyTriggered = false;
   }
 }

@@ -24,6 +24,10 @@ export class Client {
       throw new TokenError('Token is required. Set it via options.token or DISCORD_TOKEN environment variable');
     }
 
+    if (options.token && !options.token.trim()) {
+      throw new TokenError('Token cannot be empty');
+    }
+
     this.logger = new Logger({ level: this.options.logLevel });
 
     try {
@@ -59,15 +63,19 @@ export class Client {
 
       this.logger.info('Validating token');
       await this.tokenManager.validateToken(token);
-      
-      this.connected = true;
-      
+
       this.logger.info('Connecting to gateway');
       await this.gateway.connect(token);
+      this.connected = true;
       this.ready = true;
-      
-      const profile = await this.rest.get('/users/@me');
-      this.rest.applicationId = profile.id;
+
+      try {
+        const profile = await this.rest.get('/users/@me');
+        this.rest.applicationId = profile.id;
+      } catch (error) {
+        this.logger.error('Failed to fetch user profile', { error: error.message });
+        throw new ConnectionError('Failed to fetch user profile during connection');
+      }
       
       this.logger.info('Connected successfully');
     } catch (error) {
@@ -88,11 +96,9 @@ export class Client {
       await this.gateway.disconnect();
       this.connected = false;
       this.ready = false;
-      
+
       this.rateLimiter.reset();
-      this.rateLimiter.destroy();
       this.safetyManager.reset();
-      this.safetyManager.destroy();
       
       this.logger.info('Disconnected successfully');
     } catch (error) {
@@ -184,9 +190,5 @@ export class Client {
 
   get autoModeration() {
     return this.rest.autoModeration;
-  }
-
-  get billing() {
-    return this.rest.billing;
   }
 }

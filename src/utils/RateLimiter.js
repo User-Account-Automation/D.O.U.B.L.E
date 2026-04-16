@@ -185,6 +185,14 @@ export class RateLimiter {
     this.requestHistory = [];
     this.actionTimestamps.clear();
     this.globalResetTime = null;
+    // Clear and recreate cleanup interval to prevent memory leak
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = setInterval(() => {
+        this._cleanupHistory();
+        this._cleanupActionTimestamps();
+      }, 300000);
+    }
   }
 
   destroy() {
@@ -192,27 +200,8 @@ export class RateLimiter {
       clearInterval(this.cleanupInterval);
       this.cleanupInterval = null;
     }
-  }
-
-  updateFromHeaders(headers) {
-    if (headers.remaining != null) {
-      const remaining = parseInt(headers.remaining);
-      if (!isNaN(remaining)) {
-        this.remaining = remaining;
-      }
-    }
-    
-    if (headers.reset != null) {
-      const reset = parseInt(headers.reset);
-      if (!isNaN(reset)) {
-        this.resetTime = reset * 1000;
-      }
-    }
-    
-    if (headers.global === 'true') {
-      this.globalLimitActive = true;
-    } else if (headers.global === 'false') {
-      this.globalLimitActive = false;
-    }
+    this.requestHistory = [];
+    this.actionTimestamps.clear();
+    this.globalResetTime = null;
   }
 }
